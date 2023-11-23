@@ -1,0 +1,8 @@
+.products__container{
+  padding: 10px;
+  /* background-color: red; */
+  width: 85%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
