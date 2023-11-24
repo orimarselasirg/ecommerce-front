@@ -26,7 +26,7 @@ export default function CreateProduct() {
     isService: "false",
     price: 0,
     stock: 0,
-    image: ""
+    image: "",
   })
  
   // console.log(isLoading)
@@ -82,6 +82,15 @@ export default function CreateProduct() {
   const onSubmit = async (e: any) => {
     e.preventDefault()
     await createProductWithImage(product.image)
+    setProduct({
+      name: "",
+      description: "",
+      isService: "false",
+      price: 0,
+      stock: 0,
+      image: ""
+    })
+    setImageProduct("")
   }
   return (
     <div className={styles.createproduct__container__container}>
@@ -98,6 +107,7 @@ export default function CreateProduct() {
             <input  
               type="text"
               name="name"
+              value={product.name}
               onChange={onChange}
               placeholder="Nombre producto o servicio"
               className={styles.createproduct__container__input}
@@ -119,6 +129,7 @@ export default function CreateProduct() {
             <input 
               name="price"
               type="number"
+              value={product.price}
               onChange={onChange}
               placeholder="Precio"
               className={styles.createproduct__container__input}
@@ -131,6 +142,7 @@ export default function CreateProduct() {
                 <input 
                   name="stock"
                   type="number"
+                  value={product.stock}
                   onChange={onChange}
                   placeholder="Stock"
                   className={styles.createproduct__container__input}
@@ -148,6 +160,7 @@ export default function CreateProduct() {
               <textarea 
                 name="description"
                 onChange={onChange}
+                value={product.description}
                 placeholder="Ingresa una breve descripción del producto"
                 className={styles.createproduct__container__input}
                 style={{height: 100}}

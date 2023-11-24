@@ -4,26 +4,33 @@ import { MdAddShoppingCart } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 
 interface Props {
-  title: string;
+  _id: string;
+  name: string;
   price: number;
   image: string;
   description: string;
+  quantity: number;
+  onAddToCart: ({description,price, title, image, _id}: any) => any;
 }
 
-export default function ProductCard({description, image, price, title}: Props){
+export default function ProductCard({description, image, price, name, _id, quantity, onAddToCart}: Props){
+
+
   return(
     <div className={styles.productcard__container}>
-      <div style={{width: '100%', height: 300}}>
+      <div style={{width: 300, height: 300}}>
         <div className={styles.productcard__info__container__title}>
-          <h3 className={styles.productcard__info__title}>{title}</h3>
+          <h3 className={styles.productcard__info__title}>{!name ? "Producto" : name}</h3>
         </div>
         <Image
-          src={image}
+          src={image === "test" || image === "" ? require("../../public/fotosequipo2.avif"): image}
           alt="product"
           className={styles.productcard__image}
+          width= {200}
+          height={200} 
           // width='100%'
           // height={120}
-          // objectFit="cover"          
+          objectFit="contain"          
         />
         <div className={styles.productcard__info__container__price}>
           <span className={styles.productcard__info__price}>${price}</span>
@@ -35,7 +42,7 @@ export default function ProductCard({description, image, price, title}: Props){
               <FaCheck />
               <span>Stock</span>
             </div>
-            <div className={styles.productcard__info__stock}>
+            <div className={styles.productcard__info__stock} onClick={()=>onAddToCart({description,price, name, image, _id, quantity})}>
               <MdAddShoppingCart size={30} />
             </div>
           </div>

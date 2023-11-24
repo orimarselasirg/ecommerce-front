@@ -1,14 +1,16 @@
 
+'use client'
 import Image from 'next/image'
 import styles from './navbar.module.css'
 import { IoCartOutline } from "react-icons/io5";
 import Link from 'next/link';
+import { useCartContext } from '@/context/cartContext';
 
 const links = [
-  {
-    name: "Inicio",
-    href: "/home"
-  },
+  // {
+  //   name: "Inicio",
+  //   href: "/home"
+  // },
   {
     name: "Productos",
     href: "/home/products"
@@ -24,6 +26,7 @@ const links = [
 ]
 
 export default function Navbar(){
+  const {cart} = useCartContext()
   return (
     <div className={styles.navbar__container}>
       <div className={styles.navbar__items__container}>
@@ -42,10 +45,13 @@ export default function Navbar(){
         </ul>
       </div>
       <div className={styles.navbar__profile}>
-        <div>
+        <Link style={{display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}} href={'/home/cart'}>
           <IoCartOutline size={30} style={{marginRight: 20}}/>
-          <span className={styles.navbar__profile__cartinfo}>1</span>
-        </div>
+          {
+            cart.length > 0 &&
+            <span className={styles.navbar__profile__cartinfo}>{cart.length}</span>
+          }
+        </Link>
         <Image
           src={require("../../public/cart.jpeg")}
           alt="logo"

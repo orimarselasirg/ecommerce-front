@@ -1,77 +1,51 @@
+"use client"
+import { Suspense, useEffect, useState, useContext } from "react"
 import ProductCard from "@/ui/productCard/ProductCard"
 import styles from "./product.module.css"
-
-const producrsList = [
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-  {
-    title: "Queso",
-    price: 20000,
-    image: require("../../../public/productos-elaborados-12.jpg"),
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quaerat quidem quasi, quibusdam quod, quod, quod, quod."
-  },
-
-]
+import api from "@/api/axiosInstance"
+import { Product, ProductResponse } from "@/interface/Product"
+import { CartContext, useCartContext } from "@/context/cartContext"
 
 export default function Product() {
+  const [productList, setProductList] = useState<Product[]>([])
+  // const [cart, setCart] = useState<Product[]>([])
+  const {cart, setCart} = useCartContext()
+  useEffect(() => {
+    getProductData()
+  },[])
+  const getProductData = async () => {
+    try {
+      const response = await api.get('/products')
+      setProductList(response.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  
+  const addProductToCart = (product: any) => {
+    console.log('first')
+    setCart([...cart, product])
+  } 
+  console.log(cart)
+
   return (
     <div className={styles.products__container}>
       {
-        producrsList.map((product, index) => {
+        productList.map((product, index) => {
           return (
-            <ProductCard
-              key={index}
-              title={product.title}
-              price={product.price}
-              image={product.image}
-              description={product.description}
-            />
+            <Suspense fallback={<div>...cargando</div>} key={index}>
+              <ProductCard
+                key={index}
+                _id={product._id}
+                name={product.name}
+                price={product.price}
+                image={product.image}
+                quantity={product.quantity}
+                description={product.description}
+                onAddToCart={addProductToCart}
+              />
+            </Suspense>
           )
         })
       }

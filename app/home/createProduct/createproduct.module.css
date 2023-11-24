@@ -110,7 +110,7 @@
 
 .title {
   font-size: 28px;
-  color: royalblue;
+  color: #1d2c34;
   font-weight: 600;
   letter-spacing: -1px;
   position: relative;
@@ -126,13 +126,13 @@
   width: 16px;
   border-radius: 50%;
   left: 0px;
-  background-color: royalblue;
+  background-color: #1d2c34;
 }
 
 .title::before {
   width: 18px;
   height: 18px;
-  background-color: royalblue;
+  background-color: #1d2c34;
 }
 
 .title::after {
