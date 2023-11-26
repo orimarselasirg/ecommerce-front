@@ -20,6 +20,7 @@ const nextConfig = {
       "i2.wp.com",
       "cdn.auth0.com",
       "s.gravatar.com",
+      "lh3.googleusercontent.com",
     ],
   },
 };

@@ -1,6 +1,6 @@
 export interface Order {
   products: ProductOrder[];
-  userId: string | null;
+  userId: string;
   transaction: string | null;
   isApproved: string | null | boolean;
   total: number;

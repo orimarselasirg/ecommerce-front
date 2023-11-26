@@ -11,6 +11,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import ReactModal from 'react-modal';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useRouter } from 'next/navigation'
+import uuid from 'react-uuid';
 
 
 export default function Cart() {
@@ -23,19 +24,22 @@ export default function Cart() {
   const [total, setTotal] = useState(0);
   const router = useRouter();
   const [orderState, setOrderState] = useState<Order>({
-    products: [],
+    products: cart,
     total: 0,
-    isApproved: params.get('status') === 'approved' ? true : false,
-    transaction: params.get('merchant_order_id') ?? '',
-    userId: user?.subsid ?? '123'
+    isApproved: false,
+    transaction: uuid(),
+    userId: user?.sid as any
   });
 
-  console.log(user)
+
+
+
+  // console.log(user)
   
-  console.log(params.get('payment_id'))
-  console.log(params.get('external_reference'))
-  console.log(params.get('merchant_order_id'))
-  console.log(params.get('status'))
+  // console.log(params.get('payment_id'))
+  // console.log(params.get('external_reference'))
+  // console.log(params.get('merchant_order_id'))
+  // console.log(params.get('status'))
 
   useEffect(() => {
     initMercadoPago('APP_USR-b801bb89-cabb-4fe2-b490-6d21539f34ba', {locale: 'es-CO'});
@@ -44,14 +48,56 @@ export default function Cart() {
   useEffect(() => {
     if(params.get('status') !== null && params.get('status') === 'approved') {
       setOpenModal(true)
-      // payOrder(orderState.userId!, orderState)
+      updateOrder(true, params.get('merchant_order_id')!)
     }
   },[params.get('status')])
 
 
   
+ 
+
+  const updateOrder = async (isApproved: boolean, transaction: string ) => {
+    const idOrder = localStorage.getItem('idOrder');
+    const {data} = await api.put(`/carts-by-id/${idOrder}`, {isApproved, transaction})
+    return data
+  }
+
+  const closeModal =() => {
+    if(params.get('status') !== null && params.get('status') === 'approved') {
+    }
+    setOpenModal(false)
+    router.push('/home/products')
+  }
+
+  const setProductOrderMercadoPago = (order: ProductOrder[]) => {
+    const MPOrder = order.map(product => {
+      return {
+        id: product._id,
+        title: product.name,
+        description: product.description,
+        unit_price: Math.ceil(product.price),
+        quantity: Number(product.quantity),
+        picture_url: product.image
+      }
+    })
+    return MPOrder
+  }
+
+  const setPayerMercadoPago = (user: any) => {
+    return {
+      name: user.name,
+      surname: user.name,
+      email: user.email,
+      phone: {
+        area_code: '+57',
+        number: parseInt('999888777')
+      }
+    }
+  }
   const updateTotal = () => {
-    const newTotal = cart.reduce((acc, item) => acc + Number(item.price * Number(item.quantity)-1), 0);
+    const newTotal = cart.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
+    
+    console.log(newTotal);
     setTotal(newTotal);
     setOrderState({
     ...orderState,
@@ -59,19 +105,13 @@ export default function Cart() {
     });
   };
 
-  const closeModal = () => {
-    if(params.get('status') !== null && params.get('status') === 'approved') {
-      payOrder(orderState.userId!, orderState)
-    }
-    setOpenModal(false)
-    router.push('/home/products')
-  }
-
   const handleQuantityChange = (itemId: any, newQuantity: number) => {
     const updatedCartItems = cart.map((item) =>
       item._id === itemId ? { ...item, quantity: newQuantity } : item
     );
+    console.log('UPDATE',updatedCartItems)
     setCart(updatedCartItems);
+    console.log('CART',cart)
     setOrderState({
       ...orderState,
       products: updatedCartItems
@@ -79,15 +119,19 @@ export default function Cart() {
     updateTotal();
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = async (e: any) => {
+    e.preventDefault()
     try {
-      const response = await api.post('/create_preference', {});
-      setPreferenceId(response.data.id)
-      console.log(response.data);
+      const response = await api.post('/create_preference', {items: setProductOrderMercadoPago(cart), payer: setPayerMercadoPago(user)});
+      if(response.data.id) {
+        setPreferenceId(response.data.id)
+        await payOrder(orderState.userId!, )
+      }
     } catch (error) {
       console.log(error);
     }
   }
+
 
   const cleanCart = () => {
     setCart([]);
@@ -102,23 +146,24 @@ export default function Cart() {
 
 
 
-  const payOrder = async (userId: string, order: Order) => {
+  const payOrder = async (userId: string) => {
+    console.log(cart)
     try {
-      const response = await api.post(`/carts/${userId}`, order)
-      console.log(response)
-      setCart([])
       setOrderState({
-        isApproved: '',
-        products: [],
-        total: 0,
-        transaction: '',
-        userId: ''
+        ...orderState,
+        products: cart,
+        isApproved: false,
+        transaction: uuid(),
+        userId: user?.sid as any
       })
-      setTotal(0);
+      const {data} = await api.post(`/carts/${userId}`, orderState)
+      localStorage.setItem('idOrder', data.data._id)
     } catch (error) {
       console.log(error)
     }
   }
+
+  console.log('QUE PASA',orderState.products)
 
   return (
     <div className={styles.cart__container}>
@@ -144,8 +189,9 @@ export default function Cart() {
           total > 0 && !preferenceId &&
           <>
             <div>
-              <button className={styles.cart__paybutton} onClick={()=>handleCheckout()}>Checkout</button>
+              <button className={styles.cart__paybutton} onClick={(e)=>{handleCheckout(e)}}>Checkout</button>
             </div>
+
               
           </>
         }
