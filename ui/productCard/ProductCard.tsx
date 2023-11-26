@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import styles from './productcard.module.css'
 import { MdAddShoppingCart } from "react-icons/md";

@@ -2,6 +2,7 @@ import Navbar from '@/ui/navbar/Navbar'
 import type { Metadata } from 'next'
 import Sidebar from '../../ui/sidebar/Sidebar';
 import { CartProvider } from '@/context/cartContext';
+import { ProductProvider } from '@/context/productContext';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,11 +17,13 @@ export default function RootLayout({
   return (
     <div>
       <CartProvider>
-        <Navbar/>
-        <div style={{display: 'flex', flexDirection: 'row'}}>
-          <Sidebar/>
-          {children}
-        </div>
+        <ProductProvider>
+          <Navbar/>
+          <div style={{display: 'flex', flexDirection: 'row'}}>
+            <Sidebar/>
+            {children}
+          </div>
+        </ProductProvider>
       </CartProvider>
       
     </div>

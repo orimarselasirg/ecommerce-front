@@ -1,6 +1,69 @@
 .sidebar__container {
   width: 14%;
-  height: 100vh;
+  height: 96vh;
   background-color: rgb(247, 247, 247); 
   margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.sidebar__container__content{
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-around; */
+  align-items: center;
+  height: 600px;
+}
+.sidebar__input__container{
+  width: 98%;
+  background-color: aliceblue;
+  padding: 10px;
+  border-radius: 5px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.33);
+}
+
+.sidebar__input{
+  border-radius: 5px;
+  border: none;
+  width: 98%;
+  height: 30px;
+  padding: 5px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar__searchbutton{
+  margin-top: 20px;
+  width: 98%;
+  height: 35px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1d2c34;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: aliceblue;
+}
+
+.sidebar__searchbutton:hover{
+  background-color: #0e191f;
+}
+
+.sidebar__cleanbutton{
+  margin-top: 20px;
+  width: 98%;
+  height: 35px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1d2c34;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: aliceblue;
+}
+
+.sidebar__cleanbutton:hover{
+  background-color: #c25f5f;
 }

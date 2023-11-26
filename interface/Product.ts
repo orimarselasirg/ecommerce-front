@@ -1,6 +1,6 @@
 export interface ProductResponse {
   status: boolean;
-  data:Product[]
+  data: Product[]
 }
 
 export interface Product {

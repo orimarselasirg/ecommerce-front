@@ -1,0 +1,33 @@
+.radio__container{
+  /* background-color: aqua; */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  align-items: center;
+  background-color: aliceblue;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.33);
+  width: 98%;
+  border-radius: 5px;
+}
+.radio__container__content{
+  background-color: blue;
+}
+.radio__text{
+  font-size: 14px !important;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 15px;
+  width: 150px;
+  /* background-color: blue; */
+}
+
+.radio__item {
+  /* background-color: blue; */
+  width: 130px;
+  padding: 5px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
