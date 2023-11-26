@@ -6,44 +6,74 @@ import api from "@/api/axiosInstance"
 import { Product, ProductResponse } from "@/interface/Product"
 import { CartContext, useCartContext } from "@/context/cartContext"
 import { useProductContext } from "@/context/productContext"
+import Loader from "@/ui/loader/Loader"
+import ReactPaginate from "react-paginate"
 
 
 export default function Product() {
-  const [productList, setProductList] = useState<Product[]>([])
   const {cart, setCart} = useCartContext()
-  const { products, setProducts, productsOrdered } = useProductContext()
+  const { productsOrdered, isLoading, products, getAllProducts } = useProductContext()
+  const [itemOffset, setItemOffset] = useState(0);
 
-  // useEffect(() => {
-  //   // getProductData()
-  //   setProductList(products);
-  //   console.log('first')
-  // },[products])
+  useEffect(() => {
+    getAllProducts()
+  },[])
   
   const addProductToCart = (product: any) => {
     setCart([...cart, product])
   } 
 
+  let itemPerPage = 8;
+
+  const endOffset = itemOffset + itemPerPage;
+  const currentItems = productsOrdered.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(productsOrdered.length / itemPerPage);
+
+  const handlePageClick = (event: any) => {
+    const newOffset = (event.selected * itemPerPage) % productsOrdered.length;
+    setItemOffset(newOffset);
+  };
+
   
   return (
-    <div className={styles.products__container}>
-      {
-        productsOrdered.map((product, index) => {
-          return (
-            
-              <ProductCard
-                key={index}
-                _id={product._id}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                quantity={product.quantity}
-                description={product.description}
-                onAddToCart={addProductToCart}
-              />
-            
-          )
-        })
-      }
-    </div>
+    // {
+        <div className={styles.products__container__container}>
+            <ReactPaginate
+            breakLabel="..."
+            nextLabel=" Siguiente >>"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            previousLabel="<< Anterior"
+            renderOnZeroPageCount={() => { }}
+            containerClassName={styles.pagination}
+            activeClassName={styles.activeClassName}
+            previousLinkClassName={styles.previousLinkClassName}
+            nextLinkClassName={styles.nextLinkClassName}
+            pageClassName={styles.pageClassName}
+          />
+          <div className={styles.products__container}>
+          {
+            isLoading ? <Loader/>:
+            currentItems.map((product, index) => {
+              return (
+                  <ProductCard
+                    key={index}
+                    _id={product._id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    quantity={product.quantity}
+                    description={product.description}
+                    onAddToCart={addProductToCart}
+                  />
+                
+              )
+            })
+          }
+          
+          </div>
+        </div>
+      // }
   )
 }

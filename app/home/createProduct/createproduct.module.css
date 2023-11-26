@@ -78,7 +78,7 @@
 .createproduct__container__savebutton__container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-top: 40px;
 }
@@ -93,9 +93,35 @@
   transition: all 0.2s ease-in-out;
   color: aliceblue;
 }
+.createproduct__container__clearbutton{
+  width: 200px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1d2c34;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: aliceblue;
+}
 
 .createproduct__container__savebutton:hover{
   background-color: #0e191f;
+}
+
+.createproduct__container__clearbutton:hover{
+  background-color: #f34f4f;
+}
+
+.modalButton {
+  margin-top: 130px;
+  background-color: #0e191f;
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
+  color: aliceblue;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .form {

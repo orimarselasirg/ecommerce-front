@@ -5,6 +5,7 @@
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
+  /* background-color: red; */
 }
 
 .description {
@@ -16,9 +17,55 @@
   width: 100%;
   z-index: 2;
   font-family: var(--font-mono);
+  /* background-color: red; */
+  flex-direction: column;
+  
+}
+.login__container{
+  background-color: aliceblue;
+  border-radius: 5px;
+  margin-top: 15px;
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.loged__container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background-color: red; */
+  height: 200px;
 }
 
-.description a {
+.login__container__signbutton{
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1d2c34;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: aliceblue;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.login__container__signbutton:hover{
+  background-color: #0e191f;
+}
+.login__note{
+  padding: 15px;
+  text-align: center;
+}
+
+/* .description a {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,9 +153,9 @@
 
 .logo {
   position: relative;
-}
+} */
 /* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
+/* @media (hover: hover) and (pointer: fine) {
   .card:hover {
     background: rgba(var(--card-rgb), 0.1);
     border: 1px solid rgba(var(--card-border-rgb), 0.15);
@@ -123,10 +170,10 @@
   .card:hover span {
     transform: none;
   }
-}
+} */
 
 /* Mobile */
-@media (max-width: 700px) {
+/* @media (max-width: 700px) {
   .content {
     padding: 4rem;
   }
@@ -185,9 +232,9 @@
     );
     background-clip: padding-box;
     backdrop-filter: blur(24px);
-  }
+  } */
 
-  .description div {
+  /* .description div {
     align-items: flex-end;
     pointer-events: none;
     inset: auto 0 0;
@@ -200,16 +247,16 @@
     );
     z-index: 1;
   }
-}
+} */
 
 /* Tablet and Smaller Desktop */
-@media (min-width: 701px) and (max-width: 1120px) {
+/* @media (min-width: 701px) and (max-width: 1120px) {
   .grid {
     grid-template-columns: repeat(2, 50%);
   }
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .vercelLogo {
     filter: invert(1);
   }
@@ -217,8 +264,8 @@
   .logo {
     filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
   }
-}
-
+} */
+/* 
 @keyframes rotate {
   from {
     transform: rotate(360deg);
@@ -226,4 +273,4 @@
   to {
     transform: rotate(0deg);
   }
-}
+} */

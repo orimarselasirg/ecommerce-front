@@ -4,6 +4,8 @@ import styles from './sidebar.module.css'
 import RadioChecks from '../radioChecks/RadioChecks';
 import { useState } from 'react';
 import SelectOption from '../selectOptions/SelectOption';
+import { IoMdExit } from "react-icons/io";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 
 export default function Sidebar(){
@@ -11,6 +13,7 @@ export default function Sidebar(){
   const [order, setOrder] = useState<string>("asc")
   const [searchParam, setSerachParam] = useState<any>('name')
   const [inputSearch, setInputSearch] = useState<string>("")
+  const { user, error, isLoading } = useUser();
   const onSearch = (e: any) => {
     setInputSearch(e.target.value)
   }
@@ -65,9 +68,15 @@ export default function Sidebar(){
         <button className={styles.sidebar__cleanbutton} onClick={()=>clearSearch()}>Reiniciar busqueda</button>
       </div>
 
-     
-
-      
+        {
+          user &&
+          <button className={styles.sidebar__cleanbutton} style={{marginTop: 0, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <a style={{marginRight: 20}} href="/api/auth/logout">
+              Salir
+            </a>
+            <IoMdExit size={25}/>
+          </button>
+        }
     </aside>
   )
 }

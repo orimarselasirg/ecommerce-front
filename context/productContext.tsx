@@ -7,12 +7,14 @@ type ProductContextProps = {
   isLoading: boolean
   setIsLoading: Dispatch<SetStateAction<boolean>>
   createProduct: (product: ProductsCreate) =>Promise<any>
+  createProductWithImage: (image: any) =>Promise<string>
   orderByParams:(param: boolean | string | number, order: string) => any
   searchByParams:(param: boolean | string | number, search: string) => any
   clearSearch:() => any
   setProducts:Dispatch<SetStateAction<Product[]>>
   products:Product[]
   productsOrdered:Product[]
+  getAllProducts:() => void
 }
 
 export const ProductContext = createContext({} as ProductContextProps);
@@ -37,7 +39,27 @@ export const ProductProvider = ({children}: any) => {
     }
   }
 
+  const createProductWithImage = async (image: any): Promise<any> => {
+    setIsLoading(true)
+    try {
+      const formData = new FormData();
+      formData.append("picture", image);
+      const response = await api.post("/products/image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      return response.data.data
+      
+    } catch (error) {
+      console.log(error)
+    }finally {
+      setIsLoading(false);
+    }
+  }
+
   const getAllProducts = async (): Promise<void>  => {
+    setIsLoading(true)
     try {
       const {data} = await api.get("/products");
       setProducts(data.data)
@@ -45,6 +67,8 @@ export const ProductProvider = ({children}: any) => {
     } catch (error) {
       console.log(error)
       throw error
+    }finally{
+      setIsLoading(false)
     }
   }
 
@@ -117,13 +141,15 @@ export const ProductProvider = ({children}: any) => {
       value={{
         products,
         createProduct,
+        createProductWithImage,
         isLoading,
         setIsLoading,
         orderByParams,
         searchByParams,
         setProducts,
         productsOrdered,
-        clearSearch
+        clearSearch,
+        getAllProducts
       }}
     >
       {children}

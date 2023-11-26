@@ -12,16 +12,18 @@ import ReactModal from 'react-modal';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useRouter } from 'next/navigation'
 import uuid from 'react-uuid';
+import Loader from "@/ui/loader/Loader";
 
 
 export default function Cart() {
   const querystring = window.location.search
   const params = new URLSearchParams(querystring)
-  const { user, error, isLoading } = useUser();
+  const { user, error } = useUser();
   const {cart, setCart} = useCartContext()
   const [preferenceId, setPreferenceId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [orderState, setOrderState] = useState<Order>({
     products: cart,
@@ -30,11 +32,6 @@ export default function Cart() {
     transaction: uuid(),
     userId: user?.sid as any
   });
-
-
-
-
-  // console.log(user)
   
   // console.log(params.get('payment_id'))
   // console.log(params.get('external_reference'))
@@ -50,6 +47,7 @@ export default function Cart() {
       setOpenModal(true)
       updateOrder(true, params.get('merchant_order_id')!)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[params.get('status')])
 
 
@@ -96,8 +94,6 @@ export default function Cart() {
   }
   const updateTotal = () => {
     const newTotal = cart.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
-    
-    console.log(newTotal);
     setTotal(newTotal);
     setOrderState({
     ...orderState,
@@ -122,19 +118,25 @@ export default function Cart() {
   const handleCheckout = async (e: any) => {
     e.preventDefault()
     try {
+      setIsLoading(true)
       const response = await api.post('/create_preference', {items: setProductOrderMercadoPago(cart), payer: setPayerMercadoPago(user)});
       if(response.data.id) {
         setPreferenceId(response.data.id)
-        await payOrder(orderState.userId!, )
+        await payOrder(orderState.userId!)
       }
+      setIsLoading(false)
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false)
     }
   }
 
 
   const cleanCart = () => {
     setCart([]);
+    setPreferenceId(null)
+    setTotal(0)
     setOrderState({
       products: [],
       total: 0,
@@ -147,7 +149,6 @@ export default function Cart() {
 
 
   const payOrder = async (userId: string) => {
-    console.log(cart)
     try {
       setOrderState({
         ...orderState,
@@ -162,8 +163,6 @@ export default function Cart() {
       console.log(error)
     }
   }
-
-  console.log('QUE PASA',orderState.products)
 
   return (
     <div className={styles.cart__container}>
@@ -186,18 +185,18 @@ export default function Cart() {
           <p>${formatNumberWithCommas(total)}</p>
         </div>
         {
+          isLoading ? <Loader/>
+          :
           total > 0 && !preferenceId &&
-          <>
+          <> 
             <div>
               <button className={styles.cart__paybutton} onClick={(e)=>{handleCheckout(e)}}>Checkout</button>
             </div>
-
-              
           </>
         }
         <div> 
           {
-          preferenceId && 
+          preferenceId && !isLoading && 
             <Wallet initialization={{ preferenceId: preferenceId }} />
           }
         </div>

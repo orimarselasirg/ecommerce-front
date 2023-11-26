@@ -5,6 +5,12 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import Image from "next/image";
 import api from "../../../api/axiosInstance"
 import { ProductResponse, ProductsCreate } from "@/interface/Product";
+import Loader from "@/ui/loader/Loader";
+import { useProductContext } from "@/context/productContext";
+import ReactModal from "react-modal";
+import ProductCard from "@/ui/productCard/ProductCard";
+import { FaRegCheckCircle } from "react-icons/fa";
+
 
 
 type Inputs = {
@@ -17,9 +23,10 @@ type Inputs = {
 }
 
 export default function CreateProduct() {
-  const [isService, setIsService] = useState<boolean>(false)
   const [imageProduct, setImageProduct] = useState<any>("")
   const [error, setError] = useState(null)
+  const [openModal, setOpenModal] = useState<boolean>(false)
+  const {createProduct, createProductWithImage, isLoading} = useProductContext()
   const [product, setProduct] = useState<ProductsCreate>({
     name: "",
     description: "",
@@ -29,8 +36,6 @@ export default function CreateProduct() {
     image: "",
   })
  
-  // console.log(isLoading)
-
   
   const onChange = (e: any) => {
   if(e.target.name === "image"){
@@ -51,37 +56,45 @@ export default function CreateProduct() {
     }
   }
 
-  const createProductWithImage = async (image: any) => {
+  const saveProductorService = async (image: any) => {
     try {
-      const formData = new FormData();
-      formData.append("picture", image);
-      const response = await api.post("/products/image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
+      const response = await createProductWithImage(image)
       setProduct({
         ...product,
-        image: response.data.data
+        image: response
       })
-      await createProduct({...product, image: response.data.data})
+      await createProduct({...product, image: response})
     } catch (error) {
       console.log(error)
     }
   }
-  console.log(product)
-
-  const createProduct = async (product: ProductsCreate) => {
-    try {
-      await api.post("/products", product)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
+  
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    await createProductWithImage(product.image)
+    try {
+      await saveProductorService(product.image)
+      setOpenModal(!openModal)
+    } catch (error) {
+      console.log(error)
+      setOpenModal(!openModal)
+    }
+  }
+
+  const onCloseModal = async (e:any) => {
+    e.preventDefault()
+    setOpenModal(false)
+    // setProduct({
+    //   name: "",
+    //   description: "",
+    //   isService: "false",
+    //   price: 0,
+    //   stock: 0,
+    //   image: ""
+    // })
+    // setImageProduct("")
+  }
+
+  const clearProductForm = () => {
     setProduct({
       name: "",
       description: "",
@@ -92,15 +105,16 @@ export default function CreateProduct() {
     })
     setImageProduct("")
   }
+
   return (
     <div className={styles.createproduct__container__container}>
-
-      <div className={styles.createproduct__container}>
+      {
+        isLoading ? <Loader/>:
+        <div className={styles.createproduct__container}>
         <form onSubmit={onSubmit}>
         <p className={styles.title}>Crear Producto </p>
         <p className={styles.message} style={{marginBottom: 25}}>Llene la información solicitada para crear un producto. </p>
         <div className={styles.createproduct__input__header}>
-          {/* <label >Nombre producto</label> */}
           <div className={styles.createproduct__input__group}>
 
             <label className={styles.createproduct__container__label}>Nombre producto</label>
@@ -188,9 +202,39 @@ export default function CreateProduct() {
           </div>
           <div className={styles.createproduct__container__savebutton__container}>
             <button onClick={onSubmit} className={styles.createproduct__container__savebutton}>Guardar</button>
+            <button onClick={(e)=>{onCloseModal(e); clearProductForm()}} className={styles.createproduct__container__clearbutton}>Limpiar Formulario</button>
           </div>
+          
         </form>
-      </div>
+        </div>
+      }
+      <ReactModal
+        isOpen={openModal}
+        onRequestClose={() => setOpenModal(!openModal)}
+        style={{
+          overlay: {alignSelf: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center'},
+          content: {position: 'relative', width: 750, height: 700, backgroundColor: 'white', borderRadius: 5, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', overflow: 'hidden'}
+        }}
+        closeTimeoutMS={0}
+        shouldCloseOnEsc
+        shouldCloseOnOverlayClick={true}
+      >
+        <FaRegCheckCircle size={80}/>
+        <h2 style={{marginTop: 25}}>Felicitaciones! el producto {product.name} ha sido creado con exito</h2>
+        <ProductCard
+          _id={'1'}
+          name={product.name}
+          price={product.price}
+          image={product.image}
+          quantity={product.stock}
+          description={product.description}
+          onAddToCart={()=>{}}
+              />
+        <div className={styles.modal_button_container}>
+          <button onClick={(e)=>{onCloseModal(e); clearProductForm()}} className={styles.modalButton}>cerrar</button>
+        </div>
+      </ReactModal>
+
     </div>
   )
 }

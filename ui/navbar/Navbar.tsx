@@ -57,6 +57,12 @@ export default function Navbar(){
       </div>
       <div className={styles.navbar__profile}>
         {
+          !user &&
+          <a href="/api/auth/login" style={{marginRight:30}}>
+            Ingresar
+          </a>
+        }
+        {
           user &&
           <p style={{marginRight: 20}}>
             Bienvenid@ {user?.name}

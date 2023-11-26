@@ -67,3 +67,12 @@
 .sidebar__cleanbutton:hover{
   background-color: #c25f5f;
 }
+
+.sidebar__logout__container{
+  display: flex;
+  flex-direction: row;
+  width: 98%;
+  align-items: center;
+  justify-content: space-around;
+  
+}
