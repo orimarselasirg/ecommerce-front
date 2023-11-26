@@ -91,6 +91,7 @@
   background-color: #1d2c34;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  color: aliceblue;
 }
 
 .createproduct__container__savebutton:hover{

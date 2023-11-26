@@ -1,8 +1,8 @@
 export interface Order {
   products: ProductOrder[];
-  userId: string;
-  transaction: string;
-  isApproved: boolean;
+  userId: string | null;
+  transaction: string | null;
+  isApproved: string | null | boolean;
   total: number;
 }
 

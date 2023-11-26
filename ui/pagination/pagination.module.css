@@ -1,0 +1,40 @@
+.purchase__container {
+  /* background-color: aqua; */
+  width: 84%;
+  display: flex;
+  justify-content: center;
+}
+.purchase__container__table {
+  width: 70%;
+  padding: 15px;
+  background-color: #f0f8ff;
+  margin-top: 15px;
+}
+
+.purchase__table__header {
+  /* display: flex; */
+  /* justify-content: ; */
+}
+
+.purchase__table__itemheader {
+  /* display: flex;
+  flex-direction: row;
+  justify-content: space-between; */
+  /* background-color: red; */
+  padding: 10px;
+  border-bottom: 2px solid rgb(208, 206, 206);
+}
+
+.purchase__table__body {
+  /* background-color: red; */
+  text-align: center;
+  border-radius: 5px;
+  
+}
+
+.purchase__table__itembody{
+  /* background-color: red; */
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px
+}

@@ -5,6 +5,7 @@ import styles from './navbar.module.css'
 import { IoCartOutline } from "react-icons/io5";
 import Link from 'next/link';
 import { useCartContext } from '@/context/cartContext';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const links = [
   // {
@@ -27,6 +28,7 @@ const links = [
 
 export default function Navbar(){
   const {cart} = useCartContext()
+  const { user, error, isLoading } = useUser();
   return (
     <div className={styles.navbar__container}>
       <div className={styles.navbar__items__container}>
@@ -53,7 +55,7 @@ export default function Navbar(){
           }
         </Link>
         <Image
-          src={require("../../public/cart.jpeg")}
+          src={user?.picture ?? require("../../public/cart.jpeg")}
           alt="logo"
           width={50}
           height={50}
