@@ -1,40 +1,55 @@
 'use client'
 import { useState, useEffect, useContext } from "react";
 import styles from "./createproduct.module.css"
-import { useForm, SubmitHandler } from "react-hook-form"
 import Image from "next/image";
-import api from "../../../api/axiosInstance"
-import { ProductResponse, ProductsCreate } from "@/interface/Product";
+import { ProductsCreate } from "@/interface/Product";
 import Loader from "@/ui/loader/Loader";
 import { useProductContext } from "@/context/productContext";
 import ReactModal from "react-modal";
 import ProductCard from "@/ui/productCard/ProductCard";
 import { FaRegCheckCircle } from "react-icons/fa";
 
-
-
-type Inputs = {
-  name: string;
-  description: string;
-  isService: string;
-  price: number;
-  stock: number;
-  image: string;
-}
-
 export default function CreateProduct() {
   const [imageProduct, setImageProduct] = useState<any>("")
-  const [error, setError] = useState(null)
+  const [error, setError] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    image: ""
+  })
   const [openModal, setOpenModal] = useState<boolean>(false)
   const {createProduct, createProductWithImage, isLoading} = useProductContext()
   const [product, setProduct] = useState<ProductsCreate>({
     name: "",
     description: "",
     isService: "false",
-    price: 0,
-    stock: 0,
+    price: '',
+    stock: '',
     image: "",
   })
+
+  const validateInputs = (inputs: string, name: string) => {
+    const regexText = /^[a-zA-Z\s]+$/;
+    const regexNumber = /^[1-9]\d*$/;
+    if(name === "name" || name === "description") {
+      return regexText.test(inputs);
+    }
+    if(name === "price" || name === "stock") {
+      return regexNumber.test(inputs);
+    }
+  }
+
+  const validateEmptyInputs = (campos: any) => {
+    const nuevosMensajesDeError = {};
+    for (const campo in campos) {
+      if (!campos[campo]) {
+        nuevosMensajesDeError[campo] = `El campo ${campo} no puede estar vacío`;
+      }
+    }
+    setError(nuevosMensajesDeError);
+    return Object.keys(nuevosMensajesDeError).length === 0;
+  }
  
   
   const onChange = (e: any) => {
@@ -49,49 +64,56 @@ export default function CreateProduct() {
         })
       }
     } else {
-      setProduct({
-        ...product,
-        [e.target.name]: e.target.value
-      })
+      if(validateInputs(e.target.value, e.target.name)){
+        setProduct({
+          ...product,
+          [e.target.name]: e.target.value
+        })
+      }
+      if(validateEmptyInputs(e.target.value)){
+        setError({
+          name: "",
+          description: "",
+          price: "",
+          stock: "",
+          image: ""
+        })
+      }
     }
   }
 
   const saveProductorService = async (image: any) => {
-    try {
-      const response = await createProductWithImage(image)
-      setProduct({
-        ...product,
-        image: response
-      })
-      await createProduct({...product, image: response})
-    } catch (error) {
-      console.log(error)
-    }
+      try {
+        const response = await createProductWithImage(image)
+        setProduct({
+          ...product,
+          image: response
+        })
+        await createProduct({...product, image: response})
+      } catch (error) {
+        console.log(error)
+      }
+    
   }
   
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    try {
-      await saveProductorService(product.image)
-      setOpenModal(!openModal)
-    } catch (error) {
-      console.log(error)
-      setOpenModal(!openModal)
+    if(validateEmptyInputs(product)){
+      try {
+        await saveProductorService(product.image)
+        setOpenModal(!openModal)
+      } catch (error) {
+        console.log(error)
+        setOpenModal(!openModal)
+      }
+    } else {
+      return
     }
   }
 
   const onCloseModal = async (e:any) => {
     e.preventDefault()
     setOpenModal(false)
-    // setProduct({
-    //   name: "",
-    //   description: "",
-    //   isService: "false",
-    //   price: 0,
-    //   stock: 0,
-    //   image: ""
-    // })
-    // setImageProduct("")
   }
 
   const clearProductForm = () => {
@@ -126,6 +148,10 @@ export default function CreateProduct() {
               placeholder="Nombre producto o servicio"
               className={styles.createproduct__container__input}
             />
+            {
+              error.name!== "" &&
+              <p className={styles.createproduct__container__error}>{error.name}</p>
+            }
             
           </div>
           <div className={styles.createproduct__input__group}>
@@ -148,6 +174,10 @@ export default function CreateProduct() {
               placeholder="Precio"
               className={styles.createproduct__container__input}
             />
+            {
+              error.price!== "" &&
+              <p className={styles.createproduct__container__error}>{error.price}</p>
+            }
           </div>
           {
             product.isService === "false" && (
@@ -161,6 +191,10 @@ export default function CreateProduct() {
                   placeholder="Stock"
                   className={styles.createproduct__container__input}
                 />
+                {
+                  error.stock!== "" &&
+                  <p className={styles.createproduct__container__error}>{error.stock}</p>
+                }
                
               </div>
             )
@@ -179,6 +213,10 @@ export default function CreateProduct() {
                 className={styles.createproduct__container__input}
                 style={{height: 100}}
               />
+              {
+              error.description!== "" &&
+              <p className={styles.createproduct__container__error}>{error.description}</p>
+            }
         
             </div>
             <div className={styles.createproduct__container__inpufile}>
@@ -198,6 +236,10 @@ export default function CreateProduct() {
                 objectFit="cover"
                 className={styles.createproduct__container__previewimage}
               />
+              {
+                error.image!== "" &&
+                <p className={styles.createproduct__container__error}>{error.image}</p>
+              }
             </div>
           </div>
           <div className={styles.createproduct__container__savebutton__container}>

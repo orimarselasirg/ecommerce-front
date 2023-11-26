@@ -18,7 +18,7 @@ export interface ProductsCreate {
   name: string;
   description: string;
   isService: boolean | string;
-  stock: number;
-  price: number;
+  stock: string | number;
+  price: string | number;
   image: string;
 }
