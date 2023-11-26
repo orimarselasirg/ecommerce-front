@@ -40,20 +40,38 @@ export default function Navbar(){
         />
         <ul className={styles.navbar__items}>
           {
-            links.map(link => (
+            !user && links.map(link => (
+              link.name === "Productos" &&
               <Link className={styles.navbar__item} key={link.name} href={link.href}>{link.name}</Link>
+              
+            ))
+          }
+          {
+            user && links.map(link => (
+              
+              <Link className={styles.navbar__item} key={link.name} href={link.href}>{link.name}</Link>
+              
             ))
           }
         </ul>
       </div>
       <div className={styles.navbar__profile}>
-        <Link style={{display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}} href={'/home/cart'}>
-          <IoCartOutline size={30} style={{marginRight: 20}}/>
-          {
-            cart.length > 0 &&
-            <span className={styles.navbar__profile__cartinfo}>{cart.length}</span>
-          }
-        </Link>
+        {
+          user &&
+          <p style={{marginRight: 20}}>
+            Bienvenid@ {user?.name}
+          </p>
+        }
+        {
+          user &&
+          <Link style={{display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}} href={'/home/cart'}>
+            <IoCartOutline size={30} style={{marginRight: 20}}/>
+            {
+              cart.length > 0 &&
+              <span className={styles.navbar__profile__cartinfo}>{cart.length}</span>
+            }
+          </Link>
+        }
         <Image
           src={user?.picture ?? require("../../public/cart.jpeg")}
           alt="logo"
