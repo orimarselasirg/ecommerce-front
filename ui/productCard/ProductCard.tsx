@@ -14,8 +14,7 @@ interface Props {
   onAddToCart: ({description,price, title, image, _id}: any) => any;
 }
 
-export default function ProductCard({description, image, price, name, _id, quantity, onAddToCart}: Props){
-
+export default function ProductCard({description, image, price, name, _id, quantity=0, onAddToCart}: Props){
 
   return(
     <div className={styles.productcard__container}>
