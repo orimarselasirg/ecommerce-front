@@ -141,6 +141,19 @@ para poder usar la aplicacion front, debe dirigirse a las opciones de la imagen 
 
 En este punto ya tiene la aplicacion corriendo desde el contenedor
 
+### En caso que no desee realizar el proceso de creacion de imagen, puede descargar la imagen y ejecutarla en su equipo, tener presente que esta imagen necesita tener levantado el backend
+### el backend tambien tiene imagen docker y pueden descargalo con los siguientes comandos
+
+Imagen docker para frontend
+``` bash
+docker pull ramirogrisales/ecommerce
+```
+Imagen docker para backend
+```bash
+docker pull ramirogrisales/apiecommerce
+```
+
+
 ## Usos y ejemplos
 
 Sistema funcional de autenticacion con Auth0
