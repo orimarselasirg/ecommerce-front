@@ -13,30 +13,27 @@ export default function RadioChecks({order, setOrder}: Props){
 
   return (
     <div className={styles.radio__container}>
-      {/* <div className={styles.radio__container__content}> */}
-        <p className={styles.radio__text}>Tipo de ordenamiento</p>
-        <label className={styles.radio__item}>
-          <input
-            type="radio"
-            name="order"
-            value="asc"
-            checked={order === 'asc'}
-            onChange={() => changeOrder('asc')}
-          />
-          Ascendente
-        </label>
-        <label className={styles.radio__item}>
-          <input
-            type="radio"
-            name="order"
-            value="desc"
-            checked={order === 'desc'}
-            onChange={() => changeOrder('desc')}
-          />
-          Descendente
-        </label>
-      {/* </div> */}
-
-     </div>
+      <p className={styles.radio__text}>Tipo de ordenamiento</p>
+      <label className={styles.radio__item}>
+        <input
+          type="radio"
+          name="order"
+          value="asc"
+          checked={order === 'asc'}
+          onChange={() => changeOrder('asc')}
+        />
+        Ascendente
+      </label>
+      <label className={styles.radio__item}>
+        <input
+          type="radio"
+          name="order"
+          value="desc"
+          checked={order === 'desc'}
+          onChange={() => changeOrder('desc')}
+        />
+        Descendente
+      </label>
+    </div>
    )
 }

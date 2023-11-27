@@ -1,13 +1,13 @@
 'use client'
-import { useState, useEffect, useContext } from "react";
-import styles from "./createproduct.module.css"
+import { useState } from "react";
+import ReactModal from "react-modal";
+import { FaRegCheckCircle } from "react-icons/fa";
 import Image from "next/image";
 import { ProductsCreate } from "../../../interface/Product";
 import Loader from "../../../ui/loader/Loader";
 import { useProductContext } from "../../../context/productContext";
-import ReactModal from "react-modal";
 import ProductCard from "../../../ui/productCard/ProductCard";
-import { FaRegCheckCircle } from "react-icons/fa";
+import styles from "./createproduct.module.css"
 
 export default function CreateProduct() {
   const [imageProduct, setImageProduct] = useState<any>("")
@@ -41,13 +41,18 @@ export default function CreateProduct() {
   }
 
   const validateEmptyInputs = (campos: any) => {
-    const nuevosMensajesDeError = {};
+    const nuevosMensajesDeError: Record<string, string> = {};
     for (const campo in campos) {
       if (!campos[campo]) {
-        // nuevosMensajesDeError[campo] = `El campo ${campo} no puede estar vacío`;
+        nuevosMensajesDeError[campo] = `El campo ${campo} no puede estar vacío`;
       }
     }
-    // setError(nuevosMensajesDeError);
+    setError((prevErrors) => {
+      return {
+        ...prevErrors,
+        ...nuevosMensajesDeError,
+      };
+    });
     return Object.keys(nuevosMensajesDeError).length === 0;
   }
  
@@ -195,14 +200,12 @@ export default function CreateProduct() {
                   error.stock!== "" &&
                   <p className={styles.createproduct__container__error}>{error.stock}</p>
                 }
-               
               </div>
             )
           }
         </div>
       
           <div className={styles.createproduct__container__inputs__body}>
-            
             <div className={styles.createproduct__input__group}>
               <label className={styles.createproduct__container__label}>Descripción del producto</label>
               <textarea 
@@ -271,7 +274,7 @@ export default function CreateProduct() {
           quantity={product.stock}
           description={product.description}
           onAddToCart={()=>{}}
-              />
+        />
         <div className={styles.modal_button_container}>
           <button onClick={(e)=>{onCloseModal(e); clearProductForm()}} className={styles.modalButton}>cerrar</button>
         </div>

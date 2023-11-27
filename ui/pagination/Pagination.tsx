@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import styles from './pagination.module.css'
 import { formatNumberWithCommas } from '../../util/helpers';
+import styles from './pagination.module.css'
 
 interface Props {
   itemsPerPage: number
@@ -38,7 +38,6 @@ export default function Pagination({ itemsPerPage, columns, purchases }: Props){
         </tr>
         {
           currentItems.map((purchase, index) => (
-            
             <tr key={index}className={styles.purchase__table__body}>
               <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>{index+1}</td>
               <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>{purchase.transaction}</td>

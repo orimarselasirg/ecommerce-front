@@ -1,14 +1,15 @@
 
 'use client'
+import { useEffect, useState} from 'react'
+import ReactPaginate from 'react-paginate';
+import ReactModal from 'react-modal';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { IoMdInformationCircleOutline } from "react-icons/io";
 import { useCartContext } from '../../../context/cartContext'
 import { Purchase } from '../../../interface/Purchase'
 import { formatNumberWithCommas } from '../../../util/helpers'
-import { useEffect, useState} from 'react'
-import styles from './puchases.module.css'
-import ReactPaginate from 'react-paginate';
-import ReactModal from 'react-modal';
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import Loader from '../../../ui/loader/Loader'
+import styles from './puchases.module.css'
 
 
 const columns = [
@@ -53,19 +54,22 @@ const productsColumns = [
 ]
 
 export default function Purchase() {
-  const {cart, cartsByUsers, loading} = useCartContext()
+  const { cartsByUsers, loading} = useCartContext()
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [itemOffset, setItemOffset] = useState(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [purchaseDetail, setPurchaseDetail] = useState<Purchase>();
+  const { user } = useUser();
   useEffect(()=>{
     getAllPurchases()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   let itemPerPage = 10;
 
+
   const getAllPurchases = async (): Promise<void> => {
-    const res = await cartsByUsers()
+    const res = await cartsByUsers(localStorage.getItem('email')!)
     setPurchases(res)
   }
   const endOffset = itemOffset + itemPerPage;
@@ -97,7 +101,6 @@ export default function Purchase() {
             </tr>
             {
               currentItems.length > 0  && currentItems.map((purchase, index) => (
-                
                 <tr key={index}className={styles.purchase__table__body}>
                   <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>{index+1}</td>
                   <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>{purchase.transaction}</td>
@@ -176,8 +179,6 @@ export default function Purchase() {
                       <tr key={index}className={styles.purchase__table__body}>              
                         <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>{purchase.name}</td>
                         <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>{purchase.quantity}</td>
-                        {/* <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>$ {formatNumberWithCommas(purchase?.price)}</td> */}
-                        {/* <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>$ {formatNumberWithCommas(purchase?.price * 5)}</td> */}
                         <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>$ {purchase?.price}</td>
                         <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white'}}>$ {purchase?.price * 5}</td>
                         <td className={styles.purchase__table__itembody} style={{backgroundColor: index % 2 == 0 ? '#f0f8ff' : 'white', cursor: 'pointer'}}>
@@ -188,13 +189,11 @@ export default function Purchase() {
                   }
                 </table>
               </div>
-              
             </div>
             <div className={styles.modal_button_container}>
               <button onClick={()=>setOpenModal(!openModal)} className={styles.modalButton}>cerrar</button>
             </div>
           </ReactModal>
-
         </>
       }
     </div>

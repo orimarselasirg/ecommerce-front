@@ -1,11 +1,11 @@
 
 'use client'
-import Image from 'next/image'
-import styles from './navbar.module.css'
-import { IoCartOutline } from "react-icons/io5";
 import Link from 'next/link';
-import { useCartContext } from '../../context/cartContext';
+import Image from 'next/image'
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { IoCartOutline } from "react-icons/io5";
+import { useCartContext } from '../../context/cartContext';
+import styles from './navbar.module.css'
 
 const links = [
   // {
@@ -28,7 +28,7 @@ const links = [
 
 export default function Navbar(){
   const {cart} = useCartContext()
-  const { user, error, isLoading } = useUser();
+  const { user } = useUser();
   return (
     <div className={styles.navbar__container}>
       <div className={styles.navbar__items__container}>

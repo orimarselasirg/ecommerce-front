@@ -1,8 +1,8 @@
 'use client'
 import Image from 'next/image'
-import styles from './productcard.module.css'
-import { MdAddShoppingCart } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
+import { MdAddShoppingCart } from "react-icons/md";
+import styles from './productcard.module.css'
 
 interface Props {
   _id: string;
@@ -29,8 +29,6 @@ export default function ProductCard({description, image, price, name, _id, quant
           className={styles.productcard__image}
           width= {200}
           height={200} 
-          // width='100%'
-          // height={120}
           objectFit="contain"          
         />
         <div className={styles.productcard__info__container__price}>

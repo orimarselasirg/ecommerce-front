@@ -1,12 +1,12 @@
 "use client"
-import { Suspense, useEffect, useState, useContext } from "react"
+import { useEffect, useState } from "react"
+import ReactPaginate from "react-paginate"
 import ProductCard from "../../../ui/productCard/ProductCard"
-import styles from "./product.module.css"
-import { Product, ProductResponse } from "../../../interface/Product"
-import { CartContext, useCartContext } from "../../../context/cartContext"
+import { Product } from "../../../interface/Product"
+import { useCartContext } from "../../../context/cartContext"
 import { useProductContext } from "../../../context/productContext"
 import Loader from "../../../ui/loader/Loader"
-import ReactPaginate from "react-paginate"
+import styles from "./product.module.css"
 
 
 export default function Product() {
@@ -16,6 +16,7 @@ export default function Product() {
 
   useEffect(() => {
     getAllProducts()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   
   const addProductToCart = (product: any) => {
@@ -35,44 +36,40 @@ export default function Product() {
 
   
   return (
-    // {
-        <div className={styles.products__container__container}>
-            <ReactPaginate
-            breakLabel="..."
-            nextLabel=" Siguiente >>"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
-            pageCount={pageCount}
-            previousLabel="<< Anterior"
-            renderOnZeroPageCount={() => { }}
-            containerClassName={styles.pagination}
-            activeClassName={styles.activeClassName}
-            previousLinkClassName={styles.previousLinkClassName}
-            nextLinkClassName={styles.nextLinkClassName}
-            pageClassName={styles.pageClassName}
-          />
-          <div className={styles.products__container}>
-          {
-            isLoading ? <Loader/>:
-            currentItems.map((product, index) => {
-              return (
-                  <ProductCard
-                    key={index}
-                    _id={product._id}
-                    name={product.name}
-                    price={product.price}
-                    image={product.image}
-                    quantity={product.quantity}
-                    description={product.description}
-                    onAddToCart={addProductToCart}
-                  />
-                
-              )
-            })
-          }
-          
-          </div>
-        </div>
-      // }
+    <div className={styles.products__container__container}>
+        <ReactPaginate
+        breakLabel="..."
+        nextLabel=" Siguiente >>"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        pageCount={pageCount}
+        previousLabel="<< Anterior"
+        renderOnZeroPageCount={() => { }}
+        containerClassName={styles.pagination}
+        activeClassName={styles.activeClassName}
+        previousLinkClassName={styles.previousLinkClassName}
+        nextLinkClassName={styles.nextLinkClassName}
+        pageClassName={styles.pageClassName}
+      />
+      <div className={styles.products__container}>
+      {
+        isLoading ? <Loader/>:
+        currentItems.map((product, index) => {
+          return (
+            <ProductCard
+              key={index}
+              _id={product._id}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              quantity={product.quantity}
+              description={product.description}
+              onAddToCart={addProductToCart}
+            />
+          )
+        })
+      }
+      </div>
+    </div>
   )
 }

@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
-import { CartProvider } from '@/context/cartContext'
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { ProductProvider } from '@/context/productContext';
+import './globals.css'
+import { UserDatabseProvider } from '../context/userContext';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -23,13 +22,11 @@ export default function RootLayout({
       <UserProvider
         loginUrl='/home'
       >
-        <body className={inter.className}>
-          {/* <ProductProvider> */}
-            {/* <CartProvider> */}
-              {children}  
-            {/* </CartProvider> */}
-          {/* </ProductProvider> */}
-        </body>
+        <UserDatabseProvider>
+          <body className={inter.className}>
+            {children}  
+          </body>
+        </UserDatabseProvider>
       </UserProvider>
     </html>
   )

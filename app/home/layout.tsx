@@ -1,5 +1,5 @@
-import Navbar from '../../ui/navbar/Navbar'
 import type { Metadata } from 'next'
+import Navbar from '../../ui/navbar/Navbar'
 import Sidebar from '../../ui/sidebar/Sidebar';
 import { CartProvider } from '../../context/cartContext';
 import { ProductProvider } from '../../context/productContext';

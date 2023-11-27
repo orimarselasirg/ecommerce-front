@@ -19,7 +19,7 @@ export default function CartItem({id, price, title, onQuantityChange}: Props){
   };
 
   const formatNumberWithCommas = (number: any) => {
-    return number.toLocaleString('es-ES'); // Utiliza 'en-US' o el código de idioma de tu preferencia
+    return number.toLocaleString('es-ES');
   }
   return(
     <div className={styles.cartitem__container}>

@@ -1,11 +1,11 @@
 'use client'
-import { useProductContext } from '../../context/productContext'
-import styles from './sidebar.module.css'
-import RadioChecks from '../radioChecks/RadioChecks';
 import { useState } from 'react';
-import SelectOption from '../selectOptions/SelectOption';
 import { IoMdExit } from "react-icons/io";
+import { useProductContext } from '../../context/productContext'
+import RadioChecks from '../radioChecks/RadioChecks';
+import SelectOption from '../selectOptions/SelectOption';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import styles from './sidebar.module.css'
 
 
 export default function Sidebar(){
@@ -13,7 +13,7 @@ export default function Sidebar(){
   const [order, setOrder] = useState<string>("asc")
   const [searchParam, setSerachParam] = useState<any>('name')
   const [inputSearch, setInputSearch] = useState<string>("")
-  const { user, error, isLoading } = useUser();
+  const { user } = useUser();
   const onSearch = (e: any) => {
     setInputSearch(e.target.value)
   }

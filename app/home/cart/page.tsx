@@ -1,17 +1,19 @@
 'use client'
-import { useCartContext } from "../../../context/cartContext"
-import styles from './cart.module.css'
-import CartItem from "../../../ui/cartItem/CartItem"
 import {useEffect, useState} from 'react';
-import { formatNumberWithCommas } from "../../../util/helpers";
-import { Order, ProductOrder } from "../../../interface/Cart";
-import api from "../../../api/axiosInstance";
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import uuid from 'react-uuid';
 import { useUser } from '@auth0/nextjs-auth0/client'
 import ReactModal from 'react-modal';
 import { FaRegCheckCircle } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
 import { useRouter } from 'next/navigation'
-import uuid from 'react-uuid';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import { useCartContext } from "../../../context/cartContext"
+import CartItem from "../../../ui/cartItem/CartItem"
+import { formatNumberWithCommas } from "../../../util/helpers";
+import { Order, ProductOrder } from "../../../interface/Cart";
+import { useUserContext } from '../../../context/userContext';
+import api from "../../../api/axiosInstance";
+import styles from './cart.module.css'
 import Loader from "../../../ui/loader/Loader";
 
 
@@ -22,28 +24,29 @@ if (typeof window !== 'undefined') {
   querystring = window?.location?.search;
 }
   const params = new URLSearchParams(querystring)
-  const { user, error } = useUser();
+  const { user } = useUser();
   const {cart, setCart} = useCartContext()
   const [preferenceId, setPreferenceId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const {userDatabase} = useUserContext()
   const router = useRouter();
   const [orderState, setOrderState] = useState<Order>({
     products: cart,
     total: 0,
     isApproved: false,
     transaction: uuid(),
-    userId: user?.sid as any
+    userId: typeof window !== 'undefined' ? localStorage.getItem('email')! : userDatabase.email
   });
-  
+
   // console.log(params.get('payment_id'))
   // console.log(params.get('external_reference'))
   // console.log(params.get('merchant_order_id'))
   // console.log(params.get('status'))
 
   useEffect(() => {
-    initMercadoPago('APP_USR-b801bb89-cabb-4fe2-b490-6d21539f34ba', {locale: 'es-CO'});
+    initMercadoPago(`${process.env.NEXT_PUBLIC_MERCADOPADO_USER_INIT}`, {locale: 'es-CO'});
   },[])
 
   useEffect(() => {
@@ -51,11 +54,13 @@ if (typeof window !== 'undefined') {
       setOpenModal(true)
       updateOrder(true, params.get('merchant_order_id')!)
     }
+    if(params.get('status') !== null && params.get('status') === 'rejected') {
+      setOpenModal(true)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[params.get('status')])
 
 
-  
  
 
   const updateOrder = async (isApproved: boolean, transaction: string ) => {
@@ -64,8 +69,18 @@ if (typeof window !== 'undefined') {
     return data
   }
 
-  const closeModal =() => {
+  const notification = async (email: any, name: any, transaction: any, total: any, status: any) => {
+    try {
+        const res = await api.post(`/notification`, {email, name, transaction, total, status});
+        console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const closeModal =async () => {
     if(params.get('status') !== null && params.get('status') === 'approved') {
+      notification(user?.email, user?.name, params.get('merchant_order_id'), orderState.total, params.get('status'))
     }
     setOpenModal(false)
     router.push('/home/products')
@@ -148,8 +163,6 @@ if (typeof window !== 'undefined') {
     })
   }
 
-
-
   const payOrder = async (userId: string) => {
     try {
       setOrderState({
@@ -157,7 +170,7 @@ if (typeof window !== 'undefined') {
         products: cart,
         isApproved: false,
         transaction: uuid(),
-        userId: user?.sid as any
+        userId: typeof window !== 'undefined' ? localStorage.getItem('email')! : userDatabase.email
       })
       const {data} = await api.post(`/carts/${userId}`, orderState)
       localStorage.setItem('idOrder', data.data._id)
@@ -221,12 +234,26 @@ if (typeof window !== 'undefined') {
         shouldCloseOnOverlayClick={true}
       >
         <div className={styles.modal__container}>
-          <FaRegCheckCircle size={80} style={{marginBottom: 35}} color='#0e191f'/>
-
-          <h3>El pedido y el pago ha sido generado exitosamente</h3>
-          <p style={{textAlign: 'center', marginBottom: 30, marginTop: 50}}>Estimado comprador, el pedido estar siendo gestionado y muy pronto recibiras sus producto y servicios</p>
+          {
+            params.get('status') === 'rejected' ?
+            <IoCloseSharp size={80} style={{marginBottom: 35}} color='#0e191f'/>
+            :
+            <FaRegCheckCircle size={80} style={{marginBottom: 35}} color='#0e191f'/>
+          }
+          {
+            params.get('status') === 'rejected' ?
+            <>
+              <h3>Hubo un error con el pago del su pedido</h3>
+              <p style={{textAlign: 'center', marginBottom: 30, marginTop: 50}}>Estimado comprador, hubo un error en el procesamiento de su pago, le recomendamos revisar con su entidad bancaria y repetir la compra</p>
+            </>
+            :
+            <>
+              <h3>El pedido y el pago ha sido generado exitosamente</h3>
+              <p style={{textAlign: 'center', marginBottom: 30, marginTop: 50}}>Estimado comprador, el pedido estar siendo gestionado y muy pronto recibiras sus producto y servicios</p>
+            </>
+          }
           
-            <p style={{marginBottom: 55}}>a continuacion encontrara los datos de su pago</p>
+            <p style={{marginBottom: 55}}>a continuacion encontrara los datos de la transacción</p>
             <div className={styles.rowinfo}>
               <p className={styles.rowtitle}>
                 Estado del pago
