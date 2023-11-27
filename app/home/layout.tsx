@@ -1,8 +1,8 @@
-import Navbar from '@/ui/navbar/Navbar'
+import Navbar from '../../ui/navbar/Navbar'
 import type { Metadata } from 'next'
 import Sidebar from '../../ui/sidebar/Sidebar';
-import { CartProvider } from '@/context/cartContext';
-import { ProductProvider } from '@/context/productContext';
+import { CartProvider } from '../../context/cartContext';
+import { ProductProvider } from '../../context/productContext';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

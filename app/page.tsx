@@ -3,8 +3,7 @@ import Image from 'next/image'
 import styles from './page.module.css'
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Link from 'next/link';
-import { useRef } from 'react';
-import Loader from '@/ui/loader/Loader';
+import Loader from '../ui/loader/Loader';
 
 export default function Home() {
   const { user, error, isLoading } = useUser();

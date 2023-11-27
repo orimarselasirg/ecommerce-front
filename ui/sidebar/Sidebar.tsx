@@ -1,5 +1,5 @@
 'use client'
-import { useProductContext } from '@/context/productContext'
+import { useProductContext } from '../../context/productContext'
 import styles from './sidebar.module.css'
 import RadioChecks from '../radioChecks/RadioChecks';
 import { useState } from 'react';

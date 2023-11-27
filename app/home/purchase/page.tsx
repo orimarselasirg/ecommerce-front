@@ -1,15 +1,14 @@
 
 'use client'
-import { useCartContext } from '@/context/cartContext'
-import { Purchase } from '@/interface/Purchase'
-import { formatNumberWithCommas } from '@/util/helpers'
-import {useContext, useEffect, useState} from 'react'
+import { useCartContext } from '../../../context/cartContext'
+import { Purchase } from '../../../interface/Purchase'
+import { formatNumberWithCommas } from '../../../util/helpers'
+import { useEffect, useState} from 'react'
 import styles from './puchases.module.css'
-import Pagination from '@/ui/pagination/Pagination'
 import ReactPaginate from 'react-paginate';
 import ReactModal from 'react-modal';
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import Loader from '@/ui/loader/Loader'
+import Loader from '../../../ui/loader/Loader'
 
 
 const columns = [

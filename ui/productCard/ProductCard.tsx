@@ -7,10 +7,10 @@ import { FaCheck } from "react-icons/fa";
 interface Props {
   _id: string;
   name: string;
-  price: number;
+  price: number | string;
   image: string;
   description: string;
-  quantity: number;
+  quantity: number | string;
   onAddToCart: ({description,price, title, image, _id}: any) => any;
 }
 

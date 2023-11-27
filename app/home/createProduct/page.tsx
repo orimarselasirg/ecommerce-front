@@ -2,11 +2,11 @@
 import { useState, useEffect, useContext } from "react";
 import styles from "./createproduct.module.css"
 import Image from "next/image";
-import { ProductsCreate } from "@/interface/Product";
-import Loader from "@/ui/loader/Loader";
-import { useProductContext } from "@/context/productContext";
+import { ProductsCreate } from "../../../interface/Product";
+import Loader from "../../../ui/loader/Loader";
+import { useProductContext } from "../../../context/productContext";
 import ReactModal from "react-modal";
-import ProductCard from "@/ui/productCard/ProductCard";
+import ProductCard from "../../../ui/productCard/ProductCard";
 import { FaRegCheckCircle } from "react-icons/fa";
 
 export default function CreateProduct() {
@@ -44,10 +44,10 @@ export default function CreateProduct() {
     const nuevosMensajesDeError = {};
     for (const campo in campos) {
       if (!campos[campo]) {
-        nuevosMensajesDeError[campo] = `El campo ${campo} no puede estar vacío`;
+        // nuevosMensajesDeError[campo] = `El campo ${campo} no puede estar vacío`;
       }
     }
-    setError(nuevosMensajesDeError);
+    // setError(nuevosMensajesDeError);
     return Object.keys(nuevosMensajesDeError).length === 0;
   }
  

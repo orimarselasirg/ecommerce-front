@@ -1,7 +1,7 @@
 'use client'
-import api from '@/api/axiosInstance';
-import { Product } from '@/interface/Product';
-import { Purchase, PurchaseResponse } from '@/interface/Purchase';
+import api from '../api/axiosInstance';
+import { Product } from '../interface/Product';
+import { Purchase, PurchaseResponse } from '../interface/Purchase';
 import React, {createContext, useContext, Dispatch, SetStateAction,useState} from 'react';
 
 interface CartContextProps {

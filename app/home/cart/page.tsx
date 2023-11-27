@@ -1,22 +1,26 @@
 'use client'
-import { useCartContext } from "@/context/cartContext"
+import { useCartContext } from "../../../context/cartContext"
 import styles from './cart.module.css'
-import CartItem from "@/ui/cartItem/CartItem"
+import CartItem from "../../../ui/cartItem/CartItem"
 import {useEffect, useState} from 'react';
-import { formatNumberWithCommas } from "@/util/helpers";
-import { Order, ProductOrder } from "@/interface/Cart";
-import api from "@/api/axiosInstance";
+import { formatNumberWithCommas } from "../../../util/helpers";
+import { Order, ProductOrder } from "../../../interface/Cart";
+import api from "../../../api/axiosInstance";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import ReactModal from 'react-modal';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useRouter } from 'next/navigation'
 import uuid from 'react-uuid';
-import Loader from "@/ui/loader/Loader";
+import Loader from "../../../ui/loader/Loader";
 
 
 export default function Cart() {
-  const querystring = window.location.search
+  
+let querystring;
+if (typeof window !== 'undefined') {
+  querystring = window?.location?.search;
+}
   const params = new URLSearchParams(querystring)
   const { user, error } = useUser();
   const {cart, setCart} = useCartContext()
@@ -105,9 +109,7 @@ export default function Cart() {
     const updatedCartItems = cart.map((item) =>
       item._id === itemId ? { ...item, quantity: newQuantity } : item
     );
-    console.log('UPDATE',updatedCartItems)
     setCart(updatedCartItems);
-    console.log('CART',cart)
     setOrderState({
       ...orderState,
       products: updatedCartItems

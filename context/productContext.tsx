@@ -1,7 +1,7 @@
 'use client'
 import React, {Dispatch, SetStateAction, createContext, useContext, useState, useEffect} from 'react';
-import api from '@/api/axiosInstance';
-import { Product, ProductResponse, ProductsCreate } from '@/interface/Product';
+import api from '../api/axiosInstance';
+import { Product, ProductResponse, ProductsCreate } from '../interface/Product';
 
 type ProductContextProps = {
   isLoading: boolean

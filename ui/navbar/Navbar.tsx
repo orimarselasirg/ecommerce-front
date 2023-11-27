@@ -4,7 +4,7 @@ import Image from 'next/image'
 import styles from './navbar.module.css'
 import { IoCartOutline } from "react-icons/io5";
 import Link from 'next/link';
-import { useCartContext } from '@/context/cartContext';
+import { useCartContext } from '../../context/cartContext';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 const links = [

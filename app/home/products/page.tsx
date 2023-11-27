@@ -1,12 +1,11 @@
 "use client"
 import { Suspense, useEffect, useState, useContext } from "react"
-import ProductCard from "@/ui/productCard/ProductCard"
+import ProductCard from "../../../ui/productCard/ProductCard"
 import styles from "./product.module.css"
-import api from "@/api/axiosInstance"
-import { Product, ProductResponse } from "@/interface/Product"
-import { CartContext, useCartContext } from "@/context/cartContext"
-import { useProductContext } from "@/context/productContext"
-import Loader from "@/ui/loader/Loader"
+import { Product, ProductResponse } from "../../../interface/Product"
+import { CartContext, useCartContext } from "../../../context/cartContext"
+import { useProductContext } from "../../../context/productContext"
+import Loader from "../../../ui/loader/Loader"
 import ReactPaginate from "react-paginate"
 
 
